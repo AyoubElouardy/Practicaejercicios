@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PracticaEjercicios.com - Plataforma educativa con ejercicios interactivos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Sign-In SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v12.0"></script>
     <style>
         :root {
             --primary-color: #4a6fa5;
@@ -15,6 +19,10 @@
             --success-color: #28a745;
             --warning-color: #ffc107;
             --danger-color: #dc3545;
+            --math-color: #ff0000; /* Red for Matemáticas */
+            --language-color: #0000ff; /* Blue for Lenguaje */
+            --science-color: #800080; /* Purple for Ciencias */
+            --social-color: #008000; /* Green for Sociales */
         }
         
         * {
@@ -134,23 +142,6 @@
             color: var(--primary-color);
         }
         
-        /* Adsense Ad Placeholder */
-        .ad-container {
-            background-color: #f0f2f5;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 2rem auto;
-            text-align: center;
-            border: 1px dashed #ccc;
-        }
-        
-        .ad-label {
-            display: block;
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 5px;
-        }
-        
         /* Categories Section */
         .categories {
             padding: 4rem 0;
@@ -189,14 +180,20 @@
             transform: translateY(-5px);
         }
         
-        .category-icon {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: white;
+        .category-icon.math {
+            background: var(--math-color);
+        }
+        
+        .category-icon.language {
+            background: var(--language-color);
+        }
+        
+        .category-icon.science {
+            background: var(--science-color);
+        }
+        
+        .category-icon.social {
+            background: var(--social-color);
         }
         
         .category-content {
@@ -241,98 +238,6 @@
             color: var(--dark-color);
         }
         
-        /* Exercise Section */
-        .exercises {
-            padding: 4rem 0;
-            background-color: #f8f9fa;
-        }
-        
-        .exercise-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
-        }
-        
-        .exercise-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .exercise-title {
-            font-size: 1.5rem;
-            color: var(--dark-color);
-        }
-        
-        .exercise-progress {
-            display: flex;
-            align-items: center;
-            background-color: #f0f2f5;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-        }
-        
-        .exercise-question {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        
-        .options-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .option {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        
-        .option:hover {
-            border-color: var(--accent-color);
-        }
-        
-        .option.selected {
-            border-color: var(--primary-color);
-            background-color: #e8f4fd;
-        }
-        
-        .option.correct {
-            border-color: var(--success-color);
-            background-color: #d4edda;
-        }
-        
-        .option.incorrect {
-            border-color: var(--danger-color);
-            background-color: #f8d7da;
-        }
-        
-        .exercise-feedback {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            display: none;
-        }
-        
-        .feedback-correct {
-            background-color: #d4edda;
-            border-left: 4px solid var(--success-color);
-        }
-        
-        .feedback-incorrect {
-            background-color: #f8d7da;
-            border-left: 4px solid var(--danger-color);
-        }
-        
         /* Login Modal */
         .modal {
             display: none;
@@ -369,22 +274,35 @@
             color: #6c757d;
         }
         
-        .form-group {
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
             margin-bottom: 1.5rem;
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
-        
-        .form-group input {
+        .social-login button {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .google-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+        }
+        
+        .facebook-btn {
+            background-color: #3b5998;
+            color: white;
+            border: none;
         }
         
         .form-footer {
@@ -542,19 +460,6 @@
             .category-grid, .features-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .options-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .exercise-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .exercise-progress {
-                margin-top: 1rem;
-            }
         }
     </style>
 </head>
@@ -565,11 +470,11 @@
             <div class="logo">Practica<span>Ejercicios</span></div>
             <nav>
                 <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Ejercicios</a></li>
-                    <li><a href="#">Recursos</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="https://ayoubelouardy.github.io/Practicaejercicios/" target="_blank">Inicio</a></li>
+                    <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Lengua-Castellana/" target="_blank">Lenguaje</a></li>
+                    <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Matem-ticas/" target="_blank">Matemáticas</a></li>
+                    <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias/" target="_blank">Ciencias</a></li>
+                    <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias-Sociales/" target="_blank">Sociales</a></li>
                 </ul>
             </nav>
             <div class="user-menu">
@@ -612,17 +517,6 @@
         </div>
     </section>
 
-    <!-- Ad Container -->
-    <div class="container">
-        <div class="ad-container">
-            <span class="ad-label">Publicidad</span>
-            <!-- Aquí iría el código de Adsense -->
-            <div style="background:#eee; padding:60px 20px; text-align:center;">
-                Anuncio de Google Adsense
-            </div>
-        </div>
-    </div>
-
     <!-- Categories Section -->
     <section class="categories">
         <div class="container">
@@ -632,104 +526,40 @@
             </div>
             <div class="category-grid">
                 <div class="category-card">
-                    <div class="category-icon">∑</div>
+                    <div class="category-icon math">∑</div>
                     <div class="category-content">
                         <h3>Matemáticas</h3>
                         <p>Álgebra, geometría, cálculo y más. Ejercicios para todos los niveles.</p>
-                        <a href="#" class="btn">Practicar</a>
+                        <a href="https://ayoubelouardy.github.io/Practicaejercicios-Matem-ticas/" target="_blank" class="btn">Practicar</a>
                     </div>
                 </div>
                 <div class="category-card">
-                    <div class="category-icon"><i class="fas fa-book"></i></div>
+                    <div class="category-icon language"><i class="fas fa-book"></i></div>
                     <div class="category-content">
                         <h3>Lenguaje</h3>
                         <p>Gramática, ortografía, comprensión lectora y ejercicios de escritura.</p>
-                        <a href="#" class="btn">Practicar</a>
+                        <a href="https://ayoubelouardy.github.io/Practicaejercicios-Lengua-Castellana/" target="_blank" class="btn">Practicar</a>
                     </div>
                 </div>
                 <div class="category-card">
-                    <div class="category-icon"><i class="fas fa-flask"></i></div>
+                    <div class="category-icon science"><i class="fas fa-flask"></i></div>
                     <div class="category-content">
                         <h3>Ciencias</h3>
                         <p>Biología, física, química y ciencias de la tierra. Aprende experimentando.</p>
-                        <a href="#" class="btn">Practicar</a>
+                        <a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias/" target="_blank" class="btn">Practicar</a>
                     </div>
                 </div>
                 <div class="category-card">
-                    <div class="category-icon"><i class="fas fa-globe-americas"></i></div>
+                    <div class="category-icon social"><i class="fas fa-globe-americas"></i></div>
                     <div class="category-content">
                         <h3>Sociales</h3>
                         <p>Historia, geografía, economía y cultura general. Explora el mundo.</p>
-                        <a href="#" class="btn">Practicar</a>
+                        <a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias-Sociales/" target="_blank" class="btn">Practicar</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Ad Container -->
-    <div class="container">
-        <div class="ad-container">
-            <span class="ad-label">Publicidad</span>
-            <!-- Aquí iría el código de Adsense -->
-            <div style="background:#eee; padding:60px 20px; text-align:center;">
-                Anuncio de Google Adsense
-            </div>
-        </div>
-    </div>
-
-    <!-- Exercise Section -->
-    <section class="exercises">
-        <div class="container">
-            <div class="section-title">
-                <h2>Ejercicios Interactivos</h2>
-                <p>Practica con nuestros ejercicios y mejora tus habilidades</p>
-            </div>
-            
-            <div class="exercise-container">
-                <div class="exercise-header">
-                    <h3 class="exercise-title">Matemáticas: Álgebra Básica</h3>
-                    <div class="exercise-progress">
-                        <i class="fas fa-star" style="color: gold; margin-right: 5px;"></i>
-                        <span>Ejercicio <span id="currentExercise">1</span> de 5</span>
-                    </div>
-                </div>
-                
-                <div class="exercise-question">
-                    <p>Resuelve la siguiente ecuación para x: <strong>2x + 5 = 13</strong></p>
-                </div>
-                
-                <div class="options-container">
-                    <div class="option" data-correct="false">x = 3</div>
-                    <div class="option" data-correct="false">x = 5</div>
-                    <div class="option" data-correct="true">x = 4</div>
-                    <div class="option" data-correct="false">x = 6</div>
-                </div>
-                
-                <button class="btn" id="checkAnswer">Comprobar respuesta</button>
-                <button class="btn" id="nextQuestion" style="display: none; background-color: var(--success-color);">Siguiente ejercicio</button>
-                
-                <div class="exercise-feedback feedback-correct">
-                    <p><i class="fas fa-check-circle"></i> ¡Correcto! Has resuelto bien la ecuación.</p>
-                </div>
-                
-                <div class="exercise-feedback feedback-incorrect">
-                    <p><i class="fas fa-times-circle"></i> Incorrecto. La solución correcta es x = 4.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ad Container -->
-    <div class="container">
-        <div class="ad-container">
-            <span class="ad-label">Publicidad</span>
-            <!-- Aquí iría el código de Adsense -->
-            <div style="background:#eee; padding:60px 20px; text-align:center;">
-                Anuncio de Google Adsense
-            </div>
-        </div>
-    </div>
 
     <!-- Features Section -->
     <section class="features">
@@ -754,6 +584,21 @@
                     <h3>Seguimiento de Progreso</h3>
                     <p>Monitoriza tu evolución con estadísticas detalladas y recomendaciones personalizadas.</p>
                 </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+                    <h3>Amplia Variedad de Temas</h3>
+                    <p>Desde álgebra hasta ciencias sociales, cubrimos todas las materias clave para tu aprendizaje.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Accesibilidad Multiplataforma</h3>
+                    <p>Practica desde cualquier dispositivo, en cualquier momento y lugar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Comunidad de Aprendizaje</h3>
+                    <p>Únete a miles de estudiantes que mejoran sus habilidades diariamente.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -765,20 +610,17 @@
                 <h2>Iniciar Sesión</h2>
                 <span class="close-modal">&times;</span>
             </div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Correo electrónico</label>
-                    <input type="email" id="email" required placeholder="tu@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" required placeholder="Tu contraseña">
-                </div>
-                <button type="submit" class="btn" style="width: 100%;">Iniciar Sesión</button>
-                <div class="form-footer">
-                    <p>¿No tienes cuenta? <a href="#" id="registerLink">Regístrate aquí</a></p>
-                </div>
-            </form>
+            <div class="social-login">
+                <button class="google-btn" id="googleLoginBtn">
+                    <i class="fab fa-google"></i> Iniciar sesión con Google
+                </button>
+                <button class="facebook-btn" id="facebookLoginBtn">
+                    <i class="fab fa-facebook-f"></i> Iniciar sesión con Facebook
+                </button>
+            </div>
+            <div class="form-footer">
+                <p>¿No tienes cuenta? Debes registrarte con Google o Facebook para continuar.</p>
+            </div>
         </div>
     </div>
 
@@ -793,28 +635,20 @@
                 <div class="footer-column">
                     <h3>Enlaces rápidos</h3>
                     <ul>
-                        <li><a href="#">Inicio</a></li>
-                        <li><a href="#">Ejercicios</a></li>
-                        <li><a href="#">Recursos</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Contacto</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios/" target="_blank">Inicio</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Lengua-Castellana/" target="_blank">Lenguaje</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Matem-ticas/" target="_blank">Matemáticas</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias/" target="_blank">Ciencias</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias-Sociales/" target="_blank">Sociales</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Materias</h3>
                     <ul>
-                        <li><a href="#">Matemáticas</a></li>
-                        <li><a href="#">Lenguaje</a></li>
-                        <li><a href="#">Ciencias</a></li>
-                        <li><a href="#">Sociales</a></li>
-                        <li><a href="#">Inglés</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contacto</h3>
-                    <ul>
-                        <li>Email: info@practicaejercicios.com</li>
-                        <li>Teléfono: +34 912 345 678</li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Matem-ticas/" target="_blank">Matemáticas</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Lengua-Castellana/" target="_blank">Lenguaje</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias/" target="_blank">Ciencias</a></li>
+                        <li><a href="https://ayoubelouardy.github.io/Practicaejercicios-Ciencias-Sociales/" target="_blank">Sociales</a></li>
                     </ul>
                 </div>
             </div>
@@ -825,6 +659,16 @@
     </footer>
 
     <script>
+        // Inicializar Facebook SDK
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'YOUR_FACEBOOK_APP_ID', // Reemplazar con tu ID de aplicación de Facebook
+                cookie: true,
+                xfbml: true,
+                version: 'v12.0'
+            });
+        };
+
         // Datos de usuario y progreso (simulados)
         let userData = {
             loggedIn: false,
@@ -845,14 +689,8 @@
         const loginBtn = document.getElementById('loginBtn');
         const loginModal = document.getElementById('loginModal');
         const closeModal = document.querySelector('.close-modal');
-        const loginForm = document.getElementById('loginForm');
-        const registerLink = document.getElementById('registerLink');
-        const options = document.querySelectorAll('.option');
-        const checkAnswerBtn = document.getElementById('checkAnswer');
-        const nextQuestionBtn = document.getElementById('nextQuestion');
-        const currentExercise = document.getElementById('currentExercise');
-        const feedbackCorrect = document.querySelector('.feedback-correct');
-        const feedbackIncorrect = document.querySelector('.feedback-incorrect');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const facebookLoginBtn = document.getElementById('facebookLoginBtn');
 
         // Alternar dropdown de usuario
         userAvatar.addEventListener('click', function(e) {
@@ -882,28 +720,57 @@
             }
         });
 
-        // Envío del formulario de inicio de sesión
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Simular inicio de sesión exitoso
+        // Google Sign-In
+        googleLoginBtn.addEventListener('click', function() {
+            // Configurar Google Sign-In
+            google.accounts.id.initialize({
+                client_id: 'YOUR_GOOGLE_CLIENT_ID', // Reemplazar con tu Client ID de Google
+                callback: handleGoogleSignIn
+            });
+            google.accounts.id.prompt();
+        });
+
+        function handleGoogleSignIn(response) {
+            // Decodificar el token JWT de Google
+            const userObject = JSON.parse(atob(response.credential.split('.')[1]));
             userData.loggedIn = true;
-            userData.name = "Usuario Ejemplo";
-            userData.email = email;
-            
+            userData.name = userObject.name;
+            userData.email = userObject.email;
+
             // Actualizar interfaz
             userName.textContent = userData.name;
             userEmail.textContent = userData.email;
             loginBtn.textContent = "Cerrar Sesión";
-            
-            // Cerrar modal
             loginModal.style.display = 'none';
-            
+
             // Cambiar funcionalidad del botón a cerrar sesión
             loginBtn.removeEventListener('click', openLoginModal);
             loginBtn.addEventListener('click', logout);
+        }
+
+        // Facebook Sign-In
+        facebookLoginBtn.addEventListener('click', function() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me', { fields: 'name,email' }, function(user) {
+                        userData.loggedIn = true;
+                        userData.name = user.name;
+                        userData.email = user.email;
+
+                        // Actualizar interfaz
+                        userName.textContent = userData.name;
+                        userEmail.textContent = userData.email;
+                        loginBtn.textContent = "Cerrar Sesión";
+                        loginModal.style.display = 'none';
+
+                        // Cambiar funcionalidad del botón a cerrar sesión
+                        loginBtn.removeEventListener('click', openLoginModal);
+                        loginBtn.addEventListener('click', logout);
+                    });
+                } else {
+                    alert('Inicio de sesión con Facebook cancelado o fallido.');
+                }
+            }, { scope: 'public_profile,email' });
         });
 
         // Función para abrir modal de inicio de sesión
@@ -925,109 +792,17 @@
             // Restaurar funcionalidad del botón
             loginBtn.removeEventListener('click', logout);
             loginBtn.addEventListener('click', openLoginModal);
+
+            // Cerrar sesión de Google
+            google.accounts.id.disableAutoSelect();
+
+            // Cerrar sesión de Facebook
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    FB.logout();
+                }
+            });
         }
-
-        // Seleccionar opción en ejercicio
-        options.forEach(option => {
-            option.addEventListener('click', function() {
-                // Deseleccionar todas las opciones
-                options.forEach(opt => opt.classList.remove('selected'));
-                
-                // Seleccionar la opción clickeada
-                this.classList.add('selected');
-            });
-        });
-
-        // Comprobar respuesta
-        checkAnswerBtn.addEventListener('click', function() {
-            const selectedOption = document.querySelector('.option.selected');
-            
-            if (!selectedOption) {
-                alert('Por favor, selecciona una respuesta');
-                return;
-            }
-            
-            // Mostrar retroalimentación
-            if (selectedOption.dataset.correct === 'true') {
-                feedbackCorrect.style.display = 'block';
-                feedbackIncorrect.style.display = 'none';
-                selectedOption.classList.add('correct');
-                
-                // Actualizar estadísticas si el usuario está logueado
-                if (userData.loggedIn) {
-                    userData.correctAnswers++;
-                    userData.totalAnswers++;
-                    userData.completedExercises++;
-                    updateUserStats();
-                }
-            } else {
-                feedbackIncorrect.style.display = 'block';
-                feedbackCorrect.style.display = 'none';
-                selectedOption.classList.add('incorrect');
-                
-                // Resaltar la respuesta correcta
-                options.forEach(option => {
-                    if (option.dataset.correct === 'true') {
-                        option.classList.add('correct');
-                    }
-                });
-                
-                // Actualizar estadísticas si el usuario está logueado
-                if (userData.loggedIn) {
-                    userData.totalAnswers++;
-                    userData.completedExercises++;
-                    updateUserStats();
-                }
-            }
-            
-            // Ocultar botón de comprobar y mostrar siguiente
-            checkAnswerBtn.style.display = 'none';
-            nextQuestionBtn.style.display = 'inline-block';
-        });
-
-        // Siguiente pregunta
-        nextQuestionBtn.addEventListener('click', function() {
-            // Reiniciar interfaz para nueva pregunta
-            options.forEach(option => {
-                option.classList.remove('selected', 'correct', 'incorrect');
-            });
-            
-            feedbackCorrect.style.display = 'none';
-            feedbackIncorrect.style.display = 'none';
-            
-            checkAnswerBtn.style.display = 'inline-block';
-            nextQuestionBtn.style.display = 'none';
-            
-            // Cambiar número de ejercicio (simulado)
-            let current = parseInt(currentExercise.textContent);
-            currentExercise.textContent = current < 5 ? current + 1 : 1;
-            
-            // Cambiar pregunta y opciones (simulado)
-            document.querySelector('.exercise-question p').innerHTML = 
-                current % 2 === 0 ? 
-                'Resuelve la ecuación: <strong>3x - 7 = 8</strong>' : 
-                'Resuelve la ecuación: <strong>2x + 5 = 13</strong>';
-                
-            if (current % 2 === 0) {
-                options[0].textContent = 'x = 4';
-                options[0].dataset.correct = 'false';
-                options[1].textContent = 'x = 6';
-                options[1].dataset.correct = 'false';
-                options[2].textContent = 'x = 5';
-                options[2].dataset.correct = 'true';
-                options[3].textContent = 'x = 3';
-                options[3].dataset.correct = 'false';
-            } else {
-                options[0].textContent = 'x = 3';
-                options[0].dataset.correct = 'false';
-                options[1].textContent = 'x = 5';
-                options[1].dataset.correct = 'false';
-                options[2].textContent = 'x = 4';
-                options[2].dataset.correct = 'true';
-                options[3].textContent = 'x = 6';
-                options[3].dataset.correct = 'false';
-            }
-        });
 
         // Actualizar estadísticas de usuario
         function updateUserStats() {
@@ -1039,10 +814,6 @@
 
         // Inicializar eventos
         loginBtn.addEventListener('click', openLoginModal);
-        registerLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Funcionalidad de registro no implementada en este ejemplo');
-        });
     </script>
 </body>
 </html>
