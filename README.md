@@ -512,7 +512,7 @@
         <div class="container">
             <h1>Mejora tus habilidades con ejercicios prácticos</h1>
             <p>Miles de ejercicios gratuitos para estudiantes de todas las edades y niveles educativos. Matemáticas, lenguaje, ciencias y mucho más.</p>
-            <a href="#" class="btn">Comenzar ahora</a>
+            <a href="#" class="btn" id="startBtn">Comenzar ahora</a>
             <a href="#" class="btn btn-outline" style="margin-left: 10px;">Ver ejemplos</a>
         </div>
     </section>
@@ -691,6 +691,7 @@
         const closeModal = document.querySelector('.close-modal');
         const googleLoginBtn = document.getElementById('googleLoginBtn');
         const facebookLoginBtn = document.getElementById('facebookLoginBtn');
+        const startBtn = document.getElementById('startBtn');
 
         // Alternar dropdown de usuario
         userAvatar.addEventListener('click', function(e) {
@@ -704,8 +705,14 @@
         });
 
         // Abrir modal de inicio de sesión
-        loginBtn.addEventListener('click', function() {
+        function openLoginModal() {
             loginModal.style.display = 'flex';
+        }
+
+        loginBtn.addEventListener('click', openLoginModal);
+        startBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openLoginModal();
         });
 
         // Cerrar modal
@@ -773,11 +780,6 @@
             }, { scope: 'public_profile,email' });
         });
 
-        // Función para abrir modal de inicio de sesión
-        function openLoginModal() {
-            loginModal.style.display = 'flex';
-        }
-
         // Función para cerrar sesión
         function logout() {
             userData.loggedIn = false;
@@ -811,9 +813,6 @@
                 Math.round((userData.correctAnswers / userData.totalAnswers) * 100) : 0;
             correctAnswers.textContent = `${accuracy}%`;
         }
-
-        // Inicializar eventos
-        loginBtn.addEventListener('click', openLoginModal);
     </script>
 </body>
 </html>
