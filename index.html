@@ -134,23 +134,6 @@
             color: var(--primary-color);
         }
         
-        /* Adsense Ad Placeholder */
-        .ad-container {
-            background-color: #f0f2f5;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 2rem auto;
-            text-align: center;
-            border: 1px dashed #ccc;
-        }
-        
-        .ad-label {
-            display: block;
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 5px;
-        }
-        
         /* Categories Section */
         .categories {
             padding: 4rem 0;
@@ -612,17 +595,6 @@
         </div>
     </section>
 
-    <!-- Ad Container -->
-    <div class="container">
-        <div class="ad-container">
-            <span class="ad-label">Publicidad</span>
-            <!-- Aquí iría el código de Adsense -->
-            <div style="background:#eee; padding:60px 20px; text-align:center;">
-                Anuncio de Google Adsense
-            </div>
-        </div>
-    </div>
-
     <!-- Categories Section -->
     <section class="categories">
         <div class="container">
@@ -667,17 +639,6 @@
         </div>
     </section>
 
-    <!-- Ad Container -->
-    <div class="container">
-        <div class="ad-container">
-            <span class="ad-label">Publicidad</span>
-            <!-- Aquí iría el código de Adsense -->
-            <div style="background:#eee; padding:60px 20px; text-align:center;">
-                Anuncio de Google Adsense
-            </div>
-        </div>
-    </div>
-
     <!-- Exercise Section -->
     <section class="exercises">
         <div class="container">
@@ -719,17 +680,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Ad Container -->
-    <div class="container">
-        <div class="ad-container">
-            <span class="ad-label">Publicidad</span>
-            <!-- Aquí iría el código de Adsense -->
-            <div style="background:#eee; padding:60px 20px; text-align:center;">
-                Anuncio de Google Adsense
-            </div>
-        </div>
-    </div>
 
     <!-- Features Section -->
     <section class="features">
@@ -813,8 +763,6 @@
                 <div class="footer-column">
                     <h3>Contacto</h3>
                     <ul>
-                        <li>Email: info@practicaejercicios.com</li>
-                        <li>Teléfono: +34 912 345 678</li>
                     </ul>
                 </div>
             </div>
