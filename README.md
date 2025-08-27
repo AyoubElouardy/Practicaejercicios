@@ -9,6 +9,8 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Facebook SDK -->
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v12.0"></script>
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3235252091502864" crossorigin="anonymous"></script>
     <style>
         :root {
             --primary-color: #4a6fa5;
@@ -19,10 +21,10 @@
             --success-color: #28a745;
             --warning-color: #ffc107;
             --danger-color: #dc3545;
-            --math-color: #ff0000; /* Red for Matemáticas */
-            --language-color: #0000ff; /* Blue for Lenguaje */
-            --science-color: #800080; /* Purple for Ciencias */
-            --social-color: #008000; /* Green for Sociales */
+            --math-color: #ff0000;
+            --language-color: #0000ff;
+            --science-color: #800080;
+            --social-color: #008000;
         }
         
         * {
@@ -45,7 +47,6 @@
             padding: 0 15px;
         }
         
-        /* Header Styles */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -93,7 +94,6 @@
             color: var(--accent-color);
         }
         
-        /* Hero Section */
         .hero {
             background: linear-gradient(rgba(74, 111, 165, 0.8), rgba(22, 96, 136, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%234a6fa5" width="100" height="100"/><path fill="%23166088" d="M0 0L100 100" stroke-width="0"/></svg>');
             background-size: cover;
@@ -142,7 +142,6 @@
             color: var(--primary-color);
         }
         
-        /* Categories Section */
         .categories {
             padding: 4rem 0;
         }
@@ -210,7 +209,6 @@
             margin-bottom: 1rem;
         }
         
-        /* Features Section */
         .features {
             background-color: white;
             padding: 4rem 0;
@@ -238,7 +236,6 @@
             color: var(--dark-color);
         }
         
-        /* Login Modal */
         .modal {
             display: none;
             position: fixed;
@@ -310,7 +307,6 @@
             margin-top: 1.5rem;
         }
         
-        /* User Profile */
         .user-menu {
             position: relative;
         }
@@ -387,7 +383,6 @@
             color: #6c757d;
         }
         
-        /* Footer */
         footer {
             background-color: var(--dark-color);
             color: white;
@@ -432,7 +427,11 @@
             font-size: 0.9rem;
         }
         
-        /* Responsive Design */
+        .ad-container {
+            margin: 2rem auto;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -460,11 +459,14 @@
             .category-grid, .features-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .ad-container {
+                margin: 1rem auto;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container header-content">
             <div class="logo">Practica<span>Ejercicios</span></div>
@@ -507,7 +509,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Mejora tus habilidades con ejercicios prácticos</h1>
@@ -517,7 +518,6 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
     <section class="categories">
         <div class="container">
             <div class="section-title">
@@ -561,7 +561,19 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- AdSense Ad Block -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3235252091502864"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
     <section class="features">
         <div class="container">
             <div class="section-title">
@@ -603,7 +615,6 @@
         </div>
     </section>
 
-    <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -624,7 +635,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -659,17 +669,15 @@
     </footer>
 
     <script>
-        // Inicializar Facebook SDK
         window.fbAsyncInit = function() {
             FB.init({
-                appId: 'YOUR_FACEBOOK_APP_ID', // Reemplazar con tu ID de aplicación de Facebook
+                appId: 'YOUR_FACEBOOK_APP_ID',
                 cookie: true,
                 xfbml: true,
                 version: 'v12.0'
             });
         };
 
-        // Datos de usuario y progreso (simulados)
         let userData = {
             loggedIn: false,
             name: "Invitado",
@@ -679,7 +687,6 @@
             totalAnswers: 0
         };
 
-        // Elementos del DOM
         const userAvatar = document.getElementById('userAvatar');
         const userDropdown = document.getElementById('userDropdown');
         const userName = document.getElementById('userName');
@@ -693,18 +700,15 @@
         const facebookLoginBtn = document.getElementById('facebookLoginBtn');
         const startBtn = document.getElementById('startBtn');
 
-        // Alternar dropdown de usuario
         userAvatar.addEventListener('click', function(e) {
             e.stopPropagation();
             userDropdown.classList.toggle('active');
         });
 
-        // Cerrar dropdown al hacer clic fuera
         document.addEventListener('click', function() {
             userDropdown.classList.remove('active');
         });
 
-        // Abrir modal de inicio de sesión
         function openLoginModal() {
             loginModal.style.display = 'flex';
         }
@@ -715,47 +719,39 @@
             openLoginModal();
         });
 
-        // Cerrar modal
         closeModal.addEventListener('click', function() {
             loginModal.style.display = 'none';
         });
 
-        // Cerrar modal al hacer clic fuera
         window.addEventListener('click', function(e) {
             if (e.target === loginModal) {
                 loginModal.style.display = 'none';
             }
         });
 
-        // Google Sign-In
         googleLoginBtn.addEventListener('click', function() {
-            // Configurar Google Sign-In
             google.accounts.id.initialize({
-                client_id: 'YOUR_GOOGLE_CLIENT_ID', // Reemplazar con tu Client ID de Google
+                client_id: 'YOUR_GOOGLE_CLIENT_ID',
                 callback: handleGoogleSignIn
             });
             google.accounts.id.prompt();
         });
 
         function handleGoogleSignIn(response) {
-            // Decodificar el token JWT de Google
             const userObject = JSON.parse(atob(response.credential.split('.')[1]));
             userData.loggedIn = true;
             userData.name = userObject.name;
             userData.email = userObject.email;
 
-            // Actualizar interfaz
             userName.textContent = userData.name;
             userEmail.textContent = userData.email;
             loginBtn.textContent = "Cerrar Sesión";
             loginModal.style.display = 'none';
 
-            // Cambiar funcionalidad del botón a cerrar sesión
             loginBtn.removeEventListener('click', openLoginModal);
             loginBtn.addEventListener('click', logout);
         }
 
-        // Facebook Sign-In
         facebookLoginBtn.addEventListener('click', function() {
             FB.login(function(response) {
                 if (response.authResponse) {
@@ -764,13 +760,11 @@
                         userData.name = user.name;
                         userData.email = user.email;
 
-                        // Actualizar interfaz
                         userName.textContent = userData.name;
                         userEmail.textContent = userData.email;
                         loginBtn.textContent = "Cerrar Sesión";
                         loginModal.style.display = 'none';
 
-                        // Cambiar funcionalidad del botón a cerrar sesión
                         loginBtn.removeEventListener('click', openLoginModal);
                         loginBtn.addEventListener('click', logout);
                     });
@@ -780,25 +774,20 @@
             }, { scope: 'public_profile,email' });
         });
 
-        // Función para cerrar sesión
         function logout() {
             userData.loggedIn = false;
             userData.name = "Invitado";
             userData.email = "";
             
-            // Actualizar interfaz
             userName.textContent = userData.name;
             userEmail.textContent = "No has iniciado sesión";
             loginBtn.textContent = "Iniciar Sesión";
             
-            // Restaurar funcionalidad del botón
             loginBtn.removeEventListener('click', logout);
             loginBtn.addEventListener('click', openLoginModal);
 
-            // Cerrar sesión de Google
             google.accounts.id.disableAutoSelect();
 
-            // Cerrar sesión de Facebook
             FB.getLoginStatus(function(response) {
                 if (response.status === 'connected') {
                     FB.logout();
@@ -806,7 +795,6 @@
             });
         }
 
-        // Actualizar estadísticas de usuario
         function updateUserStats() {
             completedExercises.textContent = userData.completedExercises;
             const accuracy = userData.totalAnswers > 0 ? 
